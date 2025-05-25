@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.4.0/lib/p5.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/ml5@0.12.2/dist/ml5.min.js"></script>
+</head>
+<body>
+
+  <style>
+  body {
+    background-color: rgb(255, 247, 237);
+    font-family: sans-serif;
+    text-align: center;
+    padding: 20px;
+  }
+  canvas {
+    border: 2px solid #ccc;
+    margin-bottom: 10px;
+  }
+  button {
+    margin: 5px;
+    padding: 10px 15px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  div {
+    font-size: 18px;
+    margin-top: 10px;
+  }
+</style>
+
+<h1>Clasificador de Triángulos</h1>
+<p>Dibuja un triángulo y prueba a clasificarlo.</p>
+
+  <script>
+  let shapeClassifier;
+  let canvas;
+  let resultDiv;
+  let inputImage;
+  let clearButton;
+  let classifyButton;
+
+  function setup() {
+    canvas = createCanvas(400, 400);
+    background(255);
+
+    let options = {
+      inputs: [64, 64, 4], // Usa 4 si tus imágenes son PNG con canal alpha
+      task: 'imageClassification'
+    };
+    shapeClassifier = ml5.neuralNetwork(options);
+
+    const modelDetails = {
+      model: 'models/model.json',
+      metadata: 'models/model_meta.json',
+      weights: 'models/model.weights.bin'
+    };
+
+    clearButton = createButton('Limpiar');
+    clearButton.mousePressed(() => background(255));
+
+    classifyButton = createButton('Clasificar');
+    classifyButton.mousePressed(classifyImage);
+
+    resultDiv = createDiv('Cargando el modelo...');
+    inputImage = createGraphics(64, 64, 4);
+
+    shapeClassifier.load(modelDetails, modelLoaded);
+  }
+
+  function modelLoaded() {
+    console.log("Modelo cargado");
+    resultDiv.html("Modelo cargado. Dibuja y presiona Clasificar.");
+  }
+
+  function classifyImage() {
+    inputImage.copy(canvas, 0, 0, 400, 400, 0, 0, 64, 64);
+    shapeClassifier.classify({ image: inputImage }, goResults);
+  }
+
+  function goResults(err, results) {
+    if (err) {
+      console.error(err);
+      return;
+    }
+    let label = results[0].label;
+    let confidence = nf(results[0].confidence, 0, 2);
+    resultDiv.html(`Resultado: ${label} (${confidence})`);
+  }
+
+  function draw() {
+    if (mouseIsPressed) {
+      strokeWeight(8);
+      stroke(0);
+      line(mouseX, mouseY, pmouseX, pmouseY);
+    }
+  }
+</script>
+
+  
+</body>
+</html>
