@@ -37,6 +37,7 @@ for (String clase : clases) {
 
 ## Errores Hallados Durante el Desarrollo
 Durante el desarrollo del proyecto se presentaron algunos errores que permitieron mejorar el enfoque general:
+
 ***Error al guardar imágenes en Processing***
  Al principio las imágenes se guardaban fuera de la carpeta `data`, lo cual causaba problemas al cargar el dataset.
 
