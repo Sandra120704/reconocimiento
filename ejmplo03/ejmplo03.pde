@@ -1,9 +1,9 @@
 int cantidad = 100;
-String[] clases = {"rect_a", "rect_b", "rect_c", "rect_d", "acu_a", "acu_b"};
-
+String[] clases = {"rec_arr", "rec_izq", "rec_aba", "rec_der", "acu_iso",  "acu_esca" 
+};
 void setup() {
-  size(200, 200);
-  background(50,80,1);
+  size(64, 64);
+  background(50, 80, 1);
   noLoop();
   generarTriangulos();
 }
@@ -15,11 +15,10 @@ void generarTriangulos() {
       fill(random(100, 255), random(100, 255), random(100, 255));
       noStroke();
 
-      // Generar triángulo con orientación y tipo según la clase
-      if (clase.startsWith("rect")) {
-        dibujarTrianguloRectangulo(clase);
+      if (clase.startsWith("rec")) {
+        dibujarRectangulo(clase);
       } else {
-        dibujarTrianguloAcutangulo(clase);
+        dibujarAcutangulo(clase);
       }
 
       save("data/" + clase + "_" + nf(i, 3) + ".png");
@@ -27,32 +26,32 @@ void generarTriangulos() {
   }
 }
 
-void dibujarTrianguloRectangulo(String clase) {
-  int x = int(random(50, 150));
-  int y = int(random(50, 150));
-  int size = int(random(30, 60));
+void dibujarRectangulo(String clase) {
+  int x = int(random(15, 45));
+  int y = int(random(15, 45));
+  int s = int(random(10, 25));
 
-  if (clase.equals("rect_a")) {
-    triangle(x, y, x + size, y, x, y - size); // arriba
-  } else if (clase.equals("rect_b")) {
-    triangle(x, y, x - size, y, x, y - size); // izquierda
-  } else if (clase.equals("rect_c")) {
-    triangle(x, y, x - size, y, x, y + size); // abajo
-  } else if (clase.equals("rect_d")) {
-    triangle(x, y, x + size, y, x, y + size); // derecha
+  if (clase.equals("rec_arr")) {
+    triangle(x, y, x + s, y, x, y - s);
+  } else if (clase.equals("rec_izq")) {
+    triangle(x, y, x - s, y, x, y - s);
+  } else if (clase.equals("rec_aba")) {
+    triangle(x, y, x - s, y, x, y + s);
+  } else if (clase.equals("rec_der")) {
+    triangle(x, y, x + s, y, x, y + s);
   }
 }
 
-void dibujarTrianguloAcutangulo(String clase) {
-  int x = int(random(50, 150));
-  int y = int(random(50, 150));
-  int base = int(random(40, 70));
-  int altura = int(random(40, 70));
-  int desplazamiento = int(random(10, 30));
+void dibujarAcutangulo(String clase) {
+  int x = int(random(15, 45));
+  int y = int(random(15, 45));
+  int b = int(random(20, 35));
+  int h = int(random(20, 35));
+  int d = int(random(5, 15));
 
-  if (clase.equals("acu_a")) {
-    triangle(x, y, x + base / 2, y - altura, x + base, y); // isósceles
-  } else if (clase.equals("acu_b")) {
-    triangle(x, y, x + base, y, x + desplazamiento, y - altura); // escaleno
+  if (clase.equals("acu_iso")) {
+    triangle(x, y, x + b / 2, y - h, x + b, y);
+  } else if (clase.equals("acu_esca")) {
+    triangle(x, y, x + b, y, x + d, y - h);
   }
 }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -8,52 +8,39 @@
   <script src="https://cdn.jsdelivr.net/npm/ml5@0.12.2/dist/ml5.min.js"></script>
 </head>
 <body>
-
 <script>
-  let acu_a = []
-  let acu_b = []
-  let rect_a = []
-  let rect_b = []
-  let rect_c = []
-  let rect_d = []
-  let shapeClassifier
+  let clases = ['rec_arr', 'rec_izq', 'rec_aba', 'rec_der', 'acu_iso', 'acu_esca'];
+  let imagenes = {};
+  let shapeClassifier;
 
   function preload() {
-    for (let i = 0; i < 100; i++) {
-      let index = nf(i, 3, 0);
-      acu_a[i] = loadImage(`ejmplo03/data/acu_a_${index}.png`);
-      acu_b[i] = loadImage(`ejmplo03/data/acu_b_${index}.png`);
-      rect_a[i] = loadImage(`ejmplo03/data/rect_a_${index}.png`);
-      rect_b[i] = loadImage(`ejmplo03/data/rect_b_${index}.png`);
-      rect_c[i] = loadImage(`ejmplo03/data/rect_c_${index}.png`);
-      rect_d[i] = loadImage(`ejmplo03/data/rect_d_${index}.png`);
+    for (let clase of clases) {
+      imagenes[clase] = [];
+      for (let i = 0; i < 100; i++) {
+        let index = nf(i, 3);
+        imagenes[clase].push(loadImage(`ejmplo03/data/${clase}_${index}.png`));
+      }
     }
   }
 
   function setup() {
     createCanvas(400, 400);
 
-    console.log('acu_a[0] cargada:', acu_a[0]); // 
-
     let options = {
-      inputs: [64, 64, 4], 
+      inputs: [64, 64, 4],
       task: 'imageClassification',
       debug: true
     };
 
     shapeClassifier = ml5.neuralNetwork(options);
 
-    for (let i = 0; i < 100; i++) {
-      shapeClassifier.addData({ image: acu_a[i] }, { label: 'acu_a' });
-      shapeClassifier.addData({ image: acu_b[i] }, { label: 'acu_b' });
-      shapeClassifier.addData({ image: rect_a[i] }, { label: 'rect_a' });
-      shapeClassifier.addData({ image: rect_b[i] }, { label: 'rect_b' });
-      shapeClassifier.addData({ image: rect_c[i] }, { label: 'rect_c' });
-      shapeClassifier.addData({ image: rect_d[i] }, { label: 'rect_d' });
+    for (let clase of clases) {
+      for (let i = 0; i < 100; i++) {
+        shapeClassifier.addData({ image: imagenes[clase][i] }, { label: clase });
+      }
     }
 
     shapeClassifier.normalizeData();
-
     shapeClassifier.train({ epochs: 50 }, finishedTraining);
   }
 
@@ -62,6 +49,5 @@
     shapeClassifier.save();
   }
 </script>
-
 </body>
 </html>
