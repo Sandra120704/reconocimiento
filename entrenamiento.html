@@ -137,7 +137,7 @@
       limpiarCanvas();
 
       let options = {
-        inputs: [64, 64, 4],
+        inputs: [64, 64, 3],
         task: 'imageClassification'
       };
 
@@ -176,40 +176,46 @@
       modeloCargado = true;
       resultDiv.html("Modelo cargado. Dibuja y presiona Clasificar.");
     }
-
     function classifyImage() {
-      if (!modeloCargado) {
+       if (!modeloCargado) {
         resultDiv.html("Espera a que el modelo termine de cargar...");
-        return;
-      }
-
-      inputImage.copy(canvas, 0, 0, 400, 400, 0, 0, 64, 64);
-      shapeClassifier.classify({ image: inputImage }, goResults);
+      return;
     }
+  
+    inputImage.background(255); // Limpiar antes de copiar
+    inputImage.copy(canvas, 0, 0, 400, 400, 0, 0, 64, 64);
+  
+     shapeClassifier.classify({ image: inputImage }, goResults);
+ }
+   function goResults(err, results) {
+    if (err) {
+     console.error(err);
+     resultDiv.html("Error al clasificar.");
+    return;
+   }
+ 
+    let etiqueta = results[0].label;
+    let confianza = nf(results[0].confidence, 0, 2);
+    resultDiv.html(`Resultado: <b>${etiqueta}</b> (Confianza: ${confianza})`);
 
-    function goResults(err, results) {
-      if (err) {
-        console.error(err);
-        return;
-      }
+   let indiceEjemplo = Math.floor(random(0, 100));
+   let ruta = `ejmplo03/data/${etiqueta}_${nf(indiceEjemplo, 3)}.png`;
+   imagenEjemplo.attribute("src", ruta);
+   imagenEjemplo.show();
+ }
 
-      let etiqueta = results[0].label;
-      let confianza = nf(results[0].confidence, 0, 2);
-      resultDiv.html(`Resultado: <b>${etiqueta}</b> (${confianza})`);
-
-      let indiceEjemplo = Math.floor(random(0, 100));
-      let ruta = `img/${etiqueta}_${nf(indiceEjemplo, 3)}.png`;
-      imagenEjemplo.attribute("src", ruta);
-      imagenEjemplo.show();
-    }
 
     function draw() {
-      if (mouseIsPressed && mouseX >= 0 && mouseX <= width && mouseY >= 0 && mouseY <= height) {
-        strokeWeight(8);
-        stroke(0);
-        line(mouseX, mouseY, pmouseX, pmouseY);
-      }
+     if (mouseIsPressed && mouseX >= 0 && mouseX <= width && mouseY >= 0 && mouseY <= height) {
+     if (keyIsDown(SHIFT)) {
+      stroke(255);
+    } else {
+      stroke(0);
     }
+    strokeWeight(8);
+    line(mouseX, mouseY, pmouseX, pmouseY);
+  }
+}
   </script>
 </body>
 </html>
