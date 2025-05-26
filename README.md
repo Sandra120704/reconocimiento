@@ -39,12 +39,19 @@ for (String clase : clases) {
 Durante el desarrollo del proyecto se presentaron algunos errores que permitieron mejorar el enfoque general:
 ***Error al guardar imágenes en Processing***
  Al principio las imágenes se guardaban fuera de la carpeta `data`, lo cual causaba problemas al cargar el dataset.
+
  *Solucion*:  Se corrigió la ruta y se verificó que las imágenes se guardaran correctamente dentro de `ejmplo03/data`.
+
 ***Tamaño de las imágenes inconsistente***: Algunas imágenes no tenían el tamaño estándar de 64x64 px.
+
 *Solución*: Se ajustó el tamaño del `canvas` en Processing para asegurar uniformidad.
+
 ***Modelo no detectaba correctamente algunas clases***En las primeras versiones, el modelo confundía clases similares como `rect_a` y `acu_a`.
+
 *Solución*: Se generaron imágenes más variadas con colores, posiciones y rotaciones aleatorias para mejorar la generalización del modelo.
+
 ***Carga del modelo fallida en HTML***: El navegador no cargaba el modelo debido a rutas incorrectas o permisos.
+
 *Solución*: Se revisó la estructura de carpetas y se usó un servidor local para probar correctamente (`Live Server` o similar).
 
 Estos errores permitieron aprender sobre la importancia del preprocesamiento de datos, organización de archivos y pruebas iterativas del modelo.
